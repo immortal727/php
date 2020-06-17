@@ -30,6 +30,7 @@ function RemoveDir($path) {
             echo "Удаляемой папки не существует или это файл!";
         }
     }
+    else echo "Директории $path не существует";
 }
 
 function removeDirectory($dir) {
