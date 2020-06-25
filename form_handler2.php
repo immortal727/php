@@ -29,11 +29,9 @@ function upload($name_input, $pach){
             if(!empty($file)){ 
                 $error = $success = '';
                 // Ограничения размера загружаемого файла 
-                size(1024, $tmp_name, $value['size']);
+                $value['error']=size(1024, $tmp_name, $value['size'], $error='');
                 // Проверка на тип
-                type($type[$key], $file);
-                var_dump($error);
-                return;
+                $value['error']=type($type[$key], $file, $error='');
                 // Проверим на ошибки загрузки.
                 if (!empty($value['error']) 
                     || empty($tmp_name)) {
@@ -65,29 +63,34 @@ function upload($name_input, $pach){
                     }
                 }
 
-                // Изменяем имя файла
-                $file = md5($file . microtime());
-                // Проверяем существует ли такой файл в директории
-                // если существует, то изменяем название файла
-                if(is_file($uploadfile)):
+                if (empty($error)){
+                    // Изменяем имя файла
                     $file = md5($file . microtime());
-                endif;
+                    // Проверяем существует ли такой файл в директории
+                    // если существует, то изменяем название файла
+                    if(is_file($uploadfile)):
+                        $file = md5($file . microtime());
+                    endif;
 
-                // проверяет, является ли файл загруженным на сервер методом POST,
-                // если так, перемещает его в указанное место
-                if (move_uploaded_file($tmp_name, $uploadfile)) {
-                    echo "Файл $file упешно загружен\n";
-                } else {
-                    echo "Файл $file загрузить не удалось\n";
+                    // проверяет, является ли файл загруженным на сервер методом POST,
+                    // если так, перемещает его в указанное место
+                    if (move_uploaded_file($tmp_name, $uploadfile)) {
+                        echo "Файл $file упешно загружен\n";
+                    } else {
+                        echo "Файл $file загрузить не удалось\n";
+                    }
                 }
+                else{
+                    echo $error;
+                    return;
+                } 
             }
         }
-
     }
 }
 
-function size($size, $tmp_name, $file_size, $error=''){
-    if($file_size >= $size){ 
+function size($size, $tmp_name, $file_size, $error){
+    if($file_size >= $size){
         $error=2;   
         return $error;
     } 
