@@ -153,4 +153,3 @@ if (isset($_FILES[$input_name])) {
 
 // error
 // https://www.php.net/manual/ru/features.file-upload.errors.php
-

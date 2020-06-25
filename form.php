@@ -14,24 +14,24 @@
 
 <body>
 
-<form method="post" action="form_handler.php" enctype="multipart/form-data">
-    <!-- enctype="multipart/form-data" - атрибут необходим при загрузке файлов -->
-    <div>
-        <input name="title" type="text" placeholder="Название">
-    </div>
-    <div>
-        <!-- для загрузки одного файла -->
-        <!-- <input type="file" accept="image/*" name="picture"> -->
+    <form method="post" action="form_handler2.php" enctype="multipart/form-data">
+        <!-- enctype="multipart/form-data" - атрибут необходим при загрузке файлов -->
+        <div>
+            <input name="title" type="text" placeholder="Название">
+        </div>
+        <div>
+            <!-- для загрузки одного файла -->
+            <!-- <input type="file" accept="image/*" name="picture"> -->
 
-        <!-- для загрузки нескольких файлов -->
-        <input type="file" accept="image/*" multiple name="picture[]">
-    </div>
+            <!-- для загрузки нескольких файлов -->
+            <input type="file" accept="image/*" multiple name="picture[]">
+        </div>
 
-    <div>
-        <input type="submit" value="Загрузить">
-    </div>
+        <div>
+            <input type="submit" value="Загрузить">
+        </div>
 
-</form>
+    </form>
 
 </body>
 
