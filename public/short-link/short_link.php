@@ -7,29 +7,31 @@ match_check($filename, $user_link);
 function match_check($filename, $user_link){
     $arr_data=file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $host_url=parse_url($user_link, PHP_URL_HOST);
-    // Формируем короткую ссылку
     $patch_url=generate_string(parse_url($user_link, PHP_URL_PATH));
+    // Формируем короткую ссылку
     $short_url=$host_url.'/'.$patch_url;
+    // Формируем длинную ссылку
     $long_url="$user_link#$short_url";
-    foreach ($arr_data as $string) {
-        if($user_link!=$string):
-            // длинная и короткая ссылка вместе
-            $long_url="$user_link#$short_url";
-        else:
-            // если совпадение есть
-            return header('Location: form.html');;
-        endif;
-        $short_array=explode('#',$string);
-        // Если короткая ссылка уже есть в файле
-        if(!empty($short_array)):
-            foreach ($short_array as $value) {
-                if($short_url===$value) 
-                match_check($filename,$short_url);
-            }
-        endif;
+    if (empty($arr_data)){
+        write_file($filename, $long_url);
+    }else{
+        foreach ($arr_data as $user_link) {
+            $short_array=explode('#',$long_url);
+            // Если короткая ссылка уже есть в файле
+            if(!empty($short_array)):
+                foreach ($short_array as $value) {
+                    echo $value."<br/>";
+                    if($user_link===$value || $short_url===$value):
+                    match_check($filename,$short_url);
+                    else:
+                        write_file($filename, $long_url);
+                    endif;
+                }
+            endif;
+        }
     }
-    echo "Короткая ссылка $short_url";
-    write_file($filename, $long_url);
+    
+    echo "Короткая ссылка $short_url"; 
 }
 
 function write_file($filename, $data){
