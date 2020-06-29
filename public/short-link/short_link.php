@@ -12,9 +12,9 @@ function match_check($filename, $user_link){
     $short_url=$host_url.'/'.$patch_url;
     // Формируем длинную ссылку
     $long_url="$user_link#$short_url";
-    if (empty($arr_data)){
+    if (!file_get_contents($filename)):
         write_file($filename, $long_url);
-    }else{
+    else:
         foreach ($arr_data as $user_link) {
             $short_array=explode('#',$long_url);
             // Если короткая ссылка уже есть в файле
@@ -29,8 +29,7 @@ function match_check($filename, $user_link){
                 }
             endif;
         }
-    }
-    
+    endif;
     echo "Короткая ссылка $short_url"; 
 }
 
