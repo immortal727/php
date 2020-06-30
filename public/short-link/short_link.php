@@ -7,29 +7,30 @@ match_check($filename, $user_link);
 function match_check($filename, $user_link){
     $arr_data=file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $host_url=parse_url($user_link, PHP_URL_HOST);
-    $patch_url=generate_string(parse_url($user_link, PHP_URL_PATH));
-    // Формируем короткую ссылку
-    $short_url=$host_url.'/'.$patch_url;
+    
+    foreach ($arr_data as $string) {
+        // Если ссылки в файле нет, генерируете короткую ссылку
+        if ($user_link!=$string){
+            $patch_url=generate_string(parse_url($user_link, PHP_URL_PATH));
+            // Формируем короткую ссылку
+            $short_url=$host_url.'/'.$patch_url;
+        }
+        // Так как строка в файле представлена в виде
+        // https://github.com/web-ifmo/php/blob/master/tasks.md#https://gkeh.ru/ct4iv ,
+        // то разбиваем ее на короткий массив используя
+        // в качествые разделителя #
+        $arr=explode('#',$string);
+        // Проверяем есть ли короткая ссылка
+        if($arr[2]===$short_url):
+            $patch_url=generate_string(parse_url($user_link, PHP_URL_PATH));
+            // Формируем короткую ссылку
+            $short_url=$host_url.'/'.$patch_url;   
+        endif;
+    }
     // Формируем длинную ссылку
     $long_url="$user_link#$short_url";
-    if (!file_get_contents($filename)):
-        write_file($filename, $long_url);
-    else:
-        foreach ($arr_data as $user_link) {
-            $short_array=explode('#',$long_url);
-            // Если короткая ссылка уже есть в файле
-            if(!empty($short_array)):
-                foreach ($short_array as $value) {
-                    echo $value."<br/>";
-                    if($user_link===$value || $short_url===$value):
-                    match_check($filename,$short_url);
-                    else:
-                        write_file($filename, $long_url);
-                    endif;
-                }
-            endif;
-        }
-    endif;
+    // Записываем в файл
+    write_file($filename,$long_url);
     echo "Короткая ссылка $short_url"; 
 }
 
